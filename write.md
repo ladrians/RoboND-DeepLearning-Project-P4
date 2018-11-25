@@ -9,6 +9,8 @@ My solution for the Robotics NanoDegree [Project #4](https://github.com/udacity/
 [image3]: ./misc_images/patrol_non_target_sample.png
 [image4]: ./misc_images/patrol_with_target_sample.png
 [image5]: ./misc_images/following_sample.png
+[image6]: ./misc_images/simulation01.png
+[image7]: ./misc_images/simulation02.png
 
 ---
 ### Description
@@ -117,7 +119,7 @@ def decoder_block(small_ip_layer, large_ip_layer, filters):
 
 Finally the model is a 3 layered encoder/decoder starting with a 32 filter upsampled by a factor of 2 to get a 128 filter (using strides 2):
 
-```
+```python
 def fcn_model(inputs, num_classes):
 
     # Add Encoder Blocks.
@@ -190,7 +192,7 @@ early_stop = keras.callbacks.EarlyStopping(monitor=monitor_value,
                                            min_delta=min_delta, 
                                            patience=patience, 
                                            verbose=verbose, 
-                                           mode='auto') # the direction is automatically inferred from the name of the monitored quantity.
+                                           mode='auto')
 ```
 
 The `steps_per_epoch` parameter used is 200 while the selected `validation_steps` parameter is 50.
@@ -215,14 +217,16 @@ The training data result is as follows:
 
 ![Training sample][image1]
 
+I tested Adam and Nadam (witch is RMSProp + Neveror Momentum) optimizers selecting the Adam option as it got a better result with a minor margin.
+
 ### Prediction
 
 There are three different predictions available from the helper code provided:
 
  * patrol_with_targ: Test how well the network can detect the hero from a distance. 
-![patrol with target][image4] 
+![patrol with target][image4]
  * patrol_non_targ: Test how often the network makes a mistake and identifies the wrong person as the target.
-![patrol no target][image3] 
+![patrol no target][image3]
  * following_images: Test how well the network can identify the target while following them.
 ![following sample][image2]
  
@@ -302,6 +306,24 @@ Other ideas that could have been tested:
  * Change to HSV color scheme as it is more robust to lightning changes.
  * Use pre-trained networks such as VGG as an Encoder.
  * add data Augmentation based on the current data collection.
+
+### Simulation Test
+
+To test the model with the simulator:
+
+ * Use the [model_weights](data/weights/model_weights) model.
+ * Launch the simulator, select "Spawn People", and then click the "Follow Me" button.
+ * Run the realtime follower script
+
+```python
+python follower.py --pred_viz model_weights
+```
+
+Some examples of the detection are:
+
+![simulation sample 1][image6]
+
+![simulation sample 1][image7]
 
 ### Troubleshooting
 
