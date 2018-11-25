@@ -184,7 +184,7 @@ The learning rate (`learning_rate` parameter) was tuned manually; the selected v
 
 The `batch_size` tested was 16 and 32.
 
-Initially, the `num_epochs` parameters used was 2 or 3 just to make sure everything worked and to fine tune other parameters. Then, I tested with 10, 30, 40 and 50. I noticed that in some cases the last model is not the best model so I modified the Keras model configuration to use a callback function and early stop the training process if after 5 epochs there is no improvement in the loss function.
+Initially, the `num_epochs` parameter used was 2 or 3 just to make sure everything worked and to fine tune other parameters. Then, I tested with 10, 30, 40 and 50. I noticed that in some cases the last model is not the best model so I modified the Keras model configuration to use a callback function and early stop the training process if after 5 epochs there is no improvement in the loss function.
 
 ```python
 #stop training if the validation error stops improving.
@@ -217,7 +217,7 @@ The training data result is as follows:
 
 ![Training sample][image1]
 
-I tested Adam and Nadam (witch is RMSProp + Neveror Momentum) optimizers selecting the Adam option as it got a better result with a minor margin.
+I tested Adam and Nadam (RMSProp + Neveror Momentum) optimizers selecting the Adam option as it got a better result with a minor margin.
 
 ### Prediction
 
@@ -234,17 +234,17 @@ There are three different predictions available from the helper code provided:
 
 To score the network, two types of error are measured:
 
- * intersection over the union for the pixelwise classifications is computed for the target channel. 
- * determine whether the network detected the target person or not.
+ * Intersection over the union for the pixel wise classifications is computed for the target channel. 
+ * Determine whether the network detected the target person or not.
 
-Using the above, the number of detection true_positives, false positives, false negatives are counted.
+Using the above, the number of detection true positives, false positives, and false negatives are counted.
 
 #### Target following
 
 Scores for while the quad is following behind the target:
 
 ```
-number of validation samples intersection over the union evaulated on 542
+number of validation samples intersection over the union evaluated on 542
 average intersection over union for background is 0.9948830588215676
 average intersection over union for other people is 0.33597065519705943
 average intersection over union for the hero is 0.9060225071131832
@@ -253,10 +253,10 @@ number true positives: 539, number false positives: 0, number false negatives: 0
 
 #### Target not visible
 
-Scores for images while the quad is on patrol and the target is not visable:
+Scores for images while the quad is on patrol and the target is not visible:
 
 ```
-number of validation samples intersection over the union evaulated on 270
+number of validation samples intersection over the union evaluated on 270
 average intersection over union for background is 0.9806611376347832
 average intersection over union for other people is 0.5967161249589469
 average intersection over union for the hero is 0.0
@@ -266,7 +266,7 @@ number true positives: 0, number false positives: 72, number false negatives: 0
 #### Target far away
 
 ```
-number of validation samples intersection over the union evaulated on 322
+number of validation samples intersection over the union evaluated on 322
 average intersection over union for background is 0.9958197155237585
 average intersection over union for other people is 0.4255548065562906
 average intersection over union for the hero is 0.22432693807704132
@@ -291,7 +291,7 @@ The IoU for the dataset that never includes the hero is excluded from grading:
 
 #### Final Score
 
-The final score is the pixelwise `average_IoU*(n_true_positive/(n_true_positive+n_false_positive+n_false_negative))`:
+The final score is the pixel wise `average_IoU*(n_true_positive/(n_true_positive+n_false_positive+n_false_negative))`:
 
 ```
 0.4173883345204603
@@ -299,7 +299,7 @@ The final score is the pixelwise `average_IoU*(n_true_positive/(n_true_positive+
 
 ### Discussion
 
-The basic pipeline was implemented, the best result obtained was 41% accuracy from 50 epochs taking 131:50 minutes to train.
+The basic pipeline was implemented; the best result obtained was 41% accuracy from 50 epochs taking 131:50 minutes to train.
 
 Other ideas that could have been tested:
 
@@ -329,10 +329,10 @@ Some examples of the detection are:
 
 ### Training Time
 
-The model was run on a local machine using a NVidia GTX 960M card. I started using the CPU for training but decided to swith to the TensorFlow GPU based implementation because it was impossible to iterate fast.
+The model was run on a local machine using a NVidia GTX 960M card. I started using the CPU for training but decided to switch to the TensorFlow GPU based implementation because it was impossible to iterate fast.
 Some number (just for reference) of the first tries once the initial network was built:
 
-epochs | Type | Minutes
+Epochs | Type | Minutes
 --- | --- | ---
 3 | CPU | 83:52
 3 | GPU | 7:39
