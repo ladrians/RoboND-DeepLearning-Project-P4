@@ -94,6 +94,12 @@ Internally it uses a standard convolution and includes a batch normalization wit
 
 Batch normalization is based on the idea that, instead of just normalizing the inputs to the network, we normalize the inputs to layers within the network.
 
+#### Skip Connections
+
+In the middle, a concatenation layer (using the upsampled layer and a layer with more spatial information than the upsampled one) was added to retain some of the finer details from the previous layers and to alleviate the possible loss of important spatial information during the encoding phase caused by downsampling.
+
+The decoding phase is a mirror of the encoding one, taking into account the concatenation as a way to `skip connections` to the outer most encoding layer and the input allowing the network to use information from multiple resolutions. As a result, the network is able to make more precise segmentation decisions.
+
 #### Decoder
 
 The decoder upscales the output of the encoders such that is the same size as the original image. It results in segmentation or prediction of each individual pixel in the original image. Essentially, it's a reverse convolution (Transposed Convolution or deconvolution) in which the forward and backward passes are swapped.
@@ -117,7 +123,7 @@ def decoder_block(small_ip_layer, large_ip_layer, filters):
 
 #### Model Summary
 
-Finally the model is a 3 layered encoder/decoder starting with a 32 filter upsampled by a factor of 2 to get a 128 filter (using strides 2):
+Finally, the model is a 3 layered encoder/decoder starting with a 32 filter upsampled by a factor of 2 to get a 128 filter (using strides 2):
 
 ```python
 def fcn_model(inputs, num_classes):
@@ -217,7 +223,12 @@ The training data result is as follows:
 
 ![Training sample][image1]
 
-I tested Adam and Nadam (RMSProp + Neveror Momentum) optimizers selecting the Adam option as it got a better result with a minor margin.
+I tested Adam and Nadam (RMSProp + Neveror Momentum) optimizers selecting the Adam option as it got a better result with a minor margin and less training.
+
+Optimizer | Epochs | Time | Learning Rate | Score
+--- | --- | --- | --- | ---
+Adam | 26 | 131:50 | 0.001 | 0.4173883345204603
+Nadam | 50 | 253:29 | 0.002 | 0.41721526972437273
 
 ### Prediction
 
@@ -300,6 +311,12 @@ The final score is the pixel wise `average_IoU*(n_true_positive/(n_true_positive
 ### Discussion
 
 The basic pipeline was implemented; the best result obtained was 41% accuracy from 50 epochs taking 131:50 minutes to train.
+
+#### Other scenarios
+
+This type of architecture can be used for other `follow me` scenarios such as following dog, cat, car, etc. For this case, new data must be generated and correctly annotated so during a new training phase the network can generate the correct weights to do a segmentation in the new scenarios.
+
+#### Future Enhancements
 
 Other ideas that could have been tested:
 
